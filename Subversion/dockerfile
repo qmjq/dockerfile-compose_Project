@@ -1,0 +1,14 @@
+FROM centos
+MAINTAINER JING GE 20180717  http://www.opsxyz.com
+RUN yum -y install subversion
+RUN mkdir -p  /data/svndata /tmp/svn 
+WORKDIR /data/svndata
+#RUN  /usr/bin/svnadmin create .  &&  rm  -rf conf/* 
+COPY authz /tmp/svn/
+COPY passwd /tmp/svn/
+COPY svnserve.conf /tmp/svn/
+ADD  svn.sh /usr/bin/svn.sh
+RUN  chmod 755 /usr/bin/svn.sh 
+EXPOSE 3690 
+#CMD  /usr/bin/svnserve -d -r . && tailf  /etc/passwd 
+CMD  /usr/bin/svn.sh  && tailf  /etc/passwd 
