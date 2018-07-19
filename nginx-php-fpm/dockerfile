@@ -1,0 +1,31 @@
+FROM centos
+MAINTAINER QMJQ 20180818 http://www.opsxyz.com
+RUN mkdir -p /app/soft/ 
+WORKDIR /app/soft
+# yum install depends packages;
+RUN yum -y install make autoconf automake gcc gcc-c++ libtool re2c flex bison libaio libacl-devel libxml2-devel libcurl-devel enchant-devel gmp-devel gd-devel unixODBC-devel libiodbc-devel bzip2-devel perl-ExtUtils-CBuilder perl-ExtUtils-MakeMaker perl-ExtUtils-Embed libicu-devel net-snmp-devel libnl-devel libnl3-devel libnfnetlink-devel pcre-devel openssl-devel
+
+# php
+ADD  http://cn2.php.net/distributions/php-5.6.36.tar.gz .
+#COPY  php-5.6.36.tar.gz .
+RUN  useradd -M -s /sbin/nologin php && mkdir php && tar -zxvf php-5.6.36.tar.gz && cd php-5.6.36  && ./configure --prefix=/app/soft/php --enable-fpm  --with-fpm-user=php --with-fpm-group=php --with-fpm-acl --with-openssl --with-kerberos --with-system-ciphers --with-pcre-regex --with-zlib --enable-bcmath --with-bz2  --enable-calendar  --with-curl --with-libxml-dir  --with-enchant --enable-exif  --enable-ftp --with-pcre-dir  --with-gd  --with-jpeg-dir  --with-png-dir  --with-zlib-dir  --with-xpm-dir  --with-freetype-dir  --enable-gd-jis-conv --with-gettext --with-gmp --with-mhash --enable-intl --enable-mbstring --with-libmbfl  --enable-pcntl --with-snmp  --enable-sockets  --enable-zip   --with-pcre-dir --with-zlib-dir  --with-pear   --enable-maintainer-zts --enable-mysqlnd --with-mysqli --enable-embedded-mysqli --with-mysql-sock  --with-pdo-mysql  && make && make install && cd .. &&  chown -R php:php php* 
+COPY php.ini php-fpm.conf php/etc/ 
+COPY www.conf php/etc/php-fpm.d/ 
+EXPOSE 9000
+
+# nginx
+ADD  http://nginx.org/download/nginx-1.14.0.tar.gz . 
+#COPY  nginx-1.14.0.tar.gz .
+RUN  useradd -M -s /sbin/nologin nginx && mkdir nginx && tar -zxvf nginx-1.14.0.tar.gz && cd nginx-1.14.0  && ./configure  --prefix=/app/soft/nginx --user=nginx --group=nginx --with-threads --with-file-aio --with-http_ssl_module --with-http_realip_module --with-http_v2_module --with-http_image_filter_module --with-http_sub_module --with-http_dav_module --with-http_gunzip_module --with-http_gzip_static_module --with-http_auth_request_module --with-http_secure_link_module --with-pcre --with-compat --with-stream  && make && make install && cd .. &&  chown -R nginx:nginx nginx*
+RUN rm nginx/conf/nginx.conf -rf && mkdir nginx/conf/vhost
+COPY nginx.conf nginx/conf/
+COPY web.conf 404.conf  nginx/conf/vhost/
+EXPOSE 80
+EXPOSE 443
+
+# start php-fpm and nginx
+ADD nginx-php-fpm.sh  /usr/local/bin/
+RUN chmod 755  /usr/local/bin/nginx-php-fpm.sh
+CMD ["nginx-php-fpm.sh"]
+
+
