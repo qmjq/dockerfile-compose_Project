@@ -1,0 +1,93 @@
+version: "3"
+services: 
+        myeureka:
+              image: 10.100.12.181:5000/tc-centos
+              ports: 
+                    - "8761:8761"
+              deploy:
+                     replicas: 2
+
+              volumes:
+                     - ./tc-clouds-register/:/data
+                     #- ./tc-clouds-register/logs:./logs 
+              entrypoint: java -jar td-clouds-eureka.jar
+              networks:
+                     - tc
+
+        myzuul:
+              image: 10.100.12.181:5000/tc-centos
+              ports: 
+                    - "8080:8080"
+              deploy:
+                     replicas: 2
+
+              volumes:
+                     - ./tc-clouds-zuul/:/data
+                     #- ./tc-clouds-register/logs:./logs 
+              entrypoint: java -jar td-clouds-zuul.jar
+              networks:
+                     - tc
+
+        myadmin:
+              image: 10.100.12.181:5000/tc-centos
+              ports: 
+                    - "8081:8081"
+              deploy:
+                     replicas: 2
+
+              volumes:
+                     - ./tc-boss-admin/:/data
+                     #- ./tc-clouds-register/logs:./logs 
+              entrypoint: java -jar td-boss-admin.jar
+              networks:
+                     - tc
+
+        myclient:
+              image: 10.100.12.181:5000/tc-centos
+              ports: 
+                    - "8082:8082"
+              deploy:
+                     replicas: 2
+
+              #working_dir: ./tc-clouds-register
+              volumes:
+                     - ./tc-boss-client/:/data
+                     #- ./tc-clouds-register/logs:./logs 
+              entrypoint: java -jar td-boss-client.jar
+              networks:
+                     - tc
+
+
+        mycharge:
+              image: 10.100.12.181:5000/tc-centos
+              ports: 
+                    - "8083:8083"
+              deploy:
+                     replicas: 2
+
+              #working_dir: ./tc-clouds-register
+              volumes:
+                     - ./tc-boss-charge/:/data
+                     #- ./tc-clouds-register/logs:./logs 
+              entrypoint: java -jar td-boss-charge.jar
+              networks:
+                     - tc
+
+        mycrawlerthird:
+              image: 10.100.12.181:5000/tc-centos
+              ports: 
+                    - "8084:8084"
+              deploy:
+                     replicas: 2
+
+              #working_dir: ./tc-clouds-register
+              volumes:
+                     - ./tc-crawler-third/:/data
+                     #- ./tc-clouds-register/logs:./logs 
+              entrypoint: java -jar td-crawler-third.jar
+              networks:
+                     - tc
+
+networks:
+   tc:
+                   
