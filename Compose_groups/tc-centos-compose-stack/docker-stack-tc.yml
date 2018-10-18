@@ -5,7 +5,11 @@ services:
               ports: 
                     - "8761:8761"
               deploy:
-                     replicas: 2
+                     replicas: 1
+                     resources:
+                              limits:
+                                     #cpus: '0.1'  限制cpu最多只能使用10%   
+                                     memory: 512M
 
               volumes:
                      - ./tc-clouds-register/:/data
@@ -19,7 +23,11 @@ services:
               ports: 
                     - "8080:8080"
               deploy:
-                     replicas: 2
+                      replicas: 5
+                     resources:
+                              limits:
+                                     #cpus: '0.1'     
+                                     memory: 512M
 
               volumes:
                      - ./tc-clouds-zuul/:/data
@@ -33,7 +41,11 @@ services:
               ports: 
                     - "8081:8081"
               deploy:
-                     replicas: 2
+                      replicas: 5
+                     resources:
+                              limits:
+                                     #cpus: '0.1'     
+                                     memory: 512M
 
               volumes:
                      - ./tc-boss-admin/:/data
@@ -47,7 +59,11 @@ services:
               ports: 
                     - "8082:8082"
               deploy:
-                     replicas: 2
+                      replicas: 5
+                     resources:
+                              limits:
+                                     #cpus: '0.1'     
+                                     memory: 512M
 
               #working_dir: ./tc-clouds-register
               volumes:
@@ -63,7 +79,11 @@ services:
               ports: 
                     - "8083:8083"
               deploy:
-                     replicas: 2
+                      replicas: 5
+                     resources:
+                              limits:
+                                     #cpus: '0.1'     
+                                     memory: 512M
 
               #working_dir: ./tc-clouds-register
               volumes:
@@ -78,7 +98,11 @@ services:
               ports: 
                     - "8084:8084"
               deploy:
-                     replicas: 2
+                      replicas: 5
+                     resources:
+                              limits:
+                                     #cpus: '0.1'     
+                                     memory: 512M
 
               #working_dir: ./tc-clouds-register
               volumes:
