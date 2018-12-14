@@ -118,4 +118,4 @@ networks:
            #定义子网，不定义默认为随机网络  
                 ipam:
                         config:
-                                - subnet:
+                                - subnet: 10.18.0.0/16
