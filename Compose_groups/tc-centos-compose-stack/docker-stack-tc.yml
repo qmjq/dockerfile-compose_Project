@@ -13,7 +13,7 @@ services:
 
               volumes:
                      - ./tc-clouds-register/:/data
-                     #- ./tc-clouds-register/logs:./logs 
+                     #- ./tc-clouds-register/logs:/data/logs 
               entrypoint: java -jar td-clouds-eureka.jar
               networks:
                      - tc
@@ -23,7 +23,7 @@ services:
               ports: 
                     - "8080:8080"
               deploy:
-                      replicas: 5
+                     replicas: 5
                      resources:
                               limits:
                                      #cpus: '0.1'     
@@ -31,7 +31,7 @@ services:
 
               volumes:
                      - ./tc-clouds-zuul/:/data
-                     #- ./tc-clouds-register/logs:./logs 
+                     #- ./tc-clouds-register/logs:/data/logs 
               entrypoint: java -jar td-clouds-zuul.jar
               networks:
                      - tc
@@ -41,7 +41,7 @@ services:
               ports: 
                     - "8081:8081"
               deploy:
-                      replicas: 5
+                     replicas: 5
                      resources:
                               limits:
                                      #cpus: '0.1'     
@@ -49,7 +49,7 @@ services:
 
               volumes:
                      - ./tc-boss-admin/:/data
-                     #- ./tc-clouds-register/logs:./logs 
+                     #- ./tc-clouds-register/logs:/data/logs 
               entrypoint: java -jar td-boss-admin.jar
               networks:
                      - tc
@@ -59,7 +59,7 @@ services:
               ports: 
                     - "8082:8082"
               deploy:
-                      replicas: 5
+                     replicas: 5
                      resources:
                               limits:
                                      #cpus: '0.1'     
@@ -68,7 +68,7 @@ services:
               #working_dir: ./tc-clouds-register
               volumes:
                      - ./tc-boss-client/:/data
-                     #- ./tc-clouds-register/logs:./logs 
+                     #- ./tc-clouds-register/logs:/data/logs 
               entrypoint: java -jar td-boss-client.jar
               networks:
                      - tc
@@ -79,7 +79,7 @@ services:
               ports: 
                     - "8083:8083"
               deploy:
-                      replicas: 5
+                     replicas: 5
                      resources:
                               limits:
                                      #cpus: '0.1'     
@@ -88,7 +88,7 @@ services:
               #working_dir: ./tc-clouds-register
               volumes:
                      - ./tc-boss-charge/:/data
-                     #- ./tc-clouds-register/logs:./logs 
+                     #- ./tc-clouds-register/logs:/data/logs 
               entrypoint: java -jar td-boss-charge.jar
               networks:
                      - tc
@@ -98,7 +98,7 @@ services:
               ports: 
                     - "8084:8084"
               deploy:
-                      replicas: 5
+                     replicas: 5
                      resources:
                               limits:
                                      #cpus: '0.1'     
@@ -107,11 +107,15 @@ services:
               #working_dir: ./tc-clouds-register
               volumes:
                      - ./tc-crawler-third/:/data
-                     #- ./tc-clouds-register/logs:./logs 
+                     #- ./tc-clouds-register/logs:/data/logs 
               entrypoint: java -jar td-crawler-third.jar
               networks:
                      - tc
 
 networks:
-   tc:
-                   
+        #定义的swarm集群overlay覆盖网络名 tc,不定义默认为 *_default
+        tc:
+           #定义子网，不定义默认为随机网络  
+                ipam:
+                        config:
+                                - subnet: 10.18.0.0/16
