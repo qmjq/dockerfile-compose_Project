@@ -1,0 +1,146 @@
+#https://github.com/QMJQ/my-dockerfile-compose/tree/master/Compose_groups/172.18.204.180:5000/tc-centos:latest-compose-stack
+#by QMJQ:858080796
+
+version: "3"
+services: 
+        proeureka:
+              image: 172.18.204.180:5000/tc-centos:latest
+              ports: 
+                     - "8761:8761"
+              deploy:
+                     replicas: 1
+                     resources:
+                              limits:
+                                     #cpus: '0.1'  限制cpu最多只能使用10%   
+                                     memory: 8096M
+              
+              #env_file:
+              #       - /etc/dhcs.env               
+              volumes:
+                     - ./tc-clouds-eureka/:/data
+                     - ./tc-clouds-eureka/log182:/data/logs
+              entrypoint: java -jar tc-clouds-eureka.jar 
+              networks:
+                     - dhcs
+
+        myconfig:
+              image: 172.18.204.180:5000/tc-centos:latest
+              ports:
+                     - "8083:8083"
+              deploy:
+                     replicas: 1
+                     resources:
+                                limits:
+                                      #cpus: '0.1'
+                                       memory: 8096M
+              #env_file:
+              #       - /etc/dhcs.env
+              volumes:
+                     - ./tc-clouds-config/:/data
+                     - ./tc-clouds-config/log182:/data/logs
+              entrypoint: java -jar tc-clouds-config.jar --spring.profiles.active=pro 
+              networks:
+                     - dhcs
+              depends_on:
+                         - proeureka
+
+        myzuul:
+              image: 172.18.204.180:5000/tc-centos:latest
+              ports: 
+                     - "8080:8080"
+              deploy:
+                     replicas: 1
+                     resources:
+                              limits:
+                                     #cpus: '0.1'     
+                                     memory: 8096M
+
+              #env_file:
+              #       - /etc/dhcs.env               
+              volumes:
+                     - ./tc-clouds-zuul/:/data
+                     - ./tc-clouds-zuul/log182:/data/logs
+              entrypoint: java -Dconfig.profile=pro -jar tc-clouds-zuul.jar 
+              networks:
+                     - dhcs
+              depends_on:
+                         - proeureka
+                         - myconfig
+
+        myadmin:
+              image: 172.18.204.180:5000/tc-centos:latest
+              ports: 
+                     - "8081:8081"
+              deploy:
+                     replicas: 1
+                     resources:
+                              limits:
+                                     #cpus: '0.1'     
+                                     memory: 8096M
+
+              #env_file:
+              #       - /etc/dhcs.env               
+              volumes:
+                     - ./tc-clouds-admin/:/data
+                     - ./tc-clouds-admin/log182:/data/logs
+              entrypoint: java -Dconfig.profile=pro -jar tc-clouds-admin.jar 
+              networks:
+                     - dhcs
+              depends_on:
+                         - proeureka
+                         - myconfig
+
+        mycuishou:
+              image: 172.18.204.180:5000/tc-centos:latest
+              ports: 
+                    - "8082:8082"
+              deploy:
+                     replicas: 1
+                     resources:
+                              limits:
+                                     #cpus: '0.1'     
+                                     memory: 8096M
+
+              #env_file:
+              #       - /etc/dhcs.env               
+              volumes:
+                     - ./tc-clouds-cuishou/:/data
+                     - ./tc-clouds-cuishou/log182:/data/logs
+              entrypoint: java -Dconfig.profile=pro -jar tc-clouds-cuishou.jar
+              networks:
+                     - dhcs
+              depends_on:
+                         - proeureka
+                         - myconfig
+
+
+        mydata:
+              image: 172.18.204.180:5000/tc-centos:latest
+              ports: 
+                    - "8087:8087"
+              deploy:
+                     replicas: 0
+                     resources:
+                              limits:
+                                     #cpus: '0.1'     
+                                     memory: 8096M
+
+              #env_file:
+              #       - /etc/dhcs.env               
+              volumes:
+                     - ./tc-clouds-data/:/data
+                     - ./tc-clouds-data/log182:/data/logs
+              entrypoint: java -Dconfig.profile=pro -jar tc-clouds-data.jar
+              networks:
+                     - dhcs
+              depends_on:
+                         - proeureka
+                         - myconfig
+
+networks:
+   dhcs:
+       ipam:
+             config:
+                     - subnet: 10.168.0.0/16
+                    #   gateway: 10.168.0.1
+                   

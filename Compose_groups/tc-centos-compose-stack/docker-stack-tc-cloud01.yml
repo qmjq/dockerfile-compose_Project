@@ -1,0 +1,192 @@
+#https://github.com/QMJQ/my-dockerfile-compose/tree/master/Compose_groups/elk-gitlab:5000/tc-centos:latest-compose-stack
+#by QMJQ:858080796
+
+version: "3"
+services: 
+        proeureka:
+              image: elk-gitlab:5000/tc-centos:latest
+              ports: 
+                     - "8761:8761"
+              deploy:
+                     replicas: 1
+                     resources:
+                              limits:
+                                     #cpus: '0.1'  限制cpu最多只能使用10%   
+                                     memory: 8096M
+              
+              #env_file:
+              #       - /etc/tc.env               
+              volumes:
+                     - ./td-clouds-eureka/:/data
+                     - ./logs/td-clouds-eureka/log01:/data/logs
+              entrypoint: java -jar td-clouds-eureka.jar 
+              networks:
+                     - tc
+
+        myconfig:
+              image: elk-gitlab:5000/tc-centos:latest
+              ports:
+                     - "8086:8086"
+              deploy:
+                     replicas: 1
+                     resources:
+                                limits:
+                                      #cpus: '0.1'
+                                       memory: 8096M
+              #env_file:
+              #       - /etc/tc.env
+              volumes:
+                     - ./td-clouds-config/:/data
+                     - ./logs/td-clouds-config/log01:/data/logs
+              entrypoint: java -jar td-clouds-config.jar --spring.profiles.active=pro 
+              networks:
+                     - tc
+              depends_on:
+                         - proeureka
+
+        myzuul:
+              image: elk-gitlab:5000/tc-centos:latest
+              ports: 
+                     - "8080:8080"
+              deploy:
+                     replicas: 1
+                     resources:
+                              limits:
+                                     #cpus: '0.1'     
+                                     memory: 8096M
+
+              #env_file:
+              #       - /etc/tc.env               
+              volumes:
+                     - ./td-clouds-zuul/:/data
+                     - ./logs/td-clouds-zuul/log01:/data/logs
+              entrypoint: java -Dconfig.profile=pro -jar td-clouds-zuul.jar 
+              networks:
+                     - tc
+              depends_on:
+                         - proeureka
+                         - myconfig
+
+        myadmin:
+              image: elk-gitlab:5000/tc-centos:latest
+              ports: 
+                     - "8081:8081"
+              deploy:
+                     replicas: 1
+                     resources:
+                              limits:
+                                     #cpus: '0.1'     
+                                     memory: 8096M
+
+              #env_file:
+              #       - /etc/tc.env               
+              volumes:
+                     - ./td-boss-admin/:/data
+                     - ./logs/td-boss-admin/log01:/data/logs
+              entrypoint: java -Dconfig.profile=pro -jar td-boss-admin.jar 
+              networks:
+                     - tc
+              depends_on:
+                         - proeureka
+                         - myconfig
+
+        mycharge:
+              image: elk-gitlab:5000/tc-centos:latest
+              ports: 
+                    - "8083:8083"
+              deploy:
+                     replicas: 1
+                     resources:
+                              limits:
+                                     #cpus: '0.1'     
+                                     memory: 8096M
+
+              #env_file:
+              #       - /etc/tc.env               
+              volumes:
+                     - ./td-boss-charge/:/data
+                     - ./logs/td-boss-charge/log01:/data/logs
+              entrypoint: java -Dconfig.profile=pro -jar td-boss-charge.jar
+              networks:
+                     - tc
+              depends_on:
+                         - proeureka
+                         - myconfig
+
+        myclient:
+              image: elk-gitlab:5000/tc-centos:latest
+              ports: 
+                    - "8082:8082"
+              deploy:
+                     replicas: 1
+                     resources:
+                              limits:
+                                     #cpus: '0.1'     
+                                     memory: 8096M
+
+              #env_file:
+              #       - /etc/tc.env               
+              volumes:
+                     - ./td-boss-client/:/data
+                     - ./logs/td-boss-client/log01:/data/logs
+              entrypoint: java -Dconfig.profile=pro -jar td-boss-client.jar
+              networks:
+                     - tc
+              depends_on:
+                         - proeureka
+                         - myconfig
+        
+        mycube:
+              image: elk-gitlab:5000/tc-centos:latest
+              ports: 
+                    - "8085:8085"
+              deploy:
+                     replicas: 0
+                     resources:
+                              limits:
+                                     #cpus: '0.1'     
+                                     memory: 8096M
+
+              #env_file:
+              #       - /etc/tc.env               
+              volumes:
+                     - ./td-clouds-cube/:/data
+                     - ./logs/td-clouds-cube/log01:/data/logs
+              entrypoint: java -Dconfig.profile=pro -jar td-clouds-cube.jar
+              networks:
+                     - tc
+              depends_on:
+                         - proeureka
+                         - myconfig
+        
+        mycrawlerthird:
+              image: elk-gitlab:5000/tc-centos:latest
+              ports: 
+                    - "8084:8084"
+              deploy:
+                     replicas: 1
+                     resources:
+                              limits:
+                                     #cpus: '0.1'     
+                                     memory: 8096M
+
+              #env_file:
+              #       - /etc/tc.env               
+              volumes:
+                     - ./td-crawler-third/:/data 
+                     - ./td-crawler-third/crawlerthird:/home/crawlerthird
+                     - ./logs/td-crawler-third/log01:/data/logs
+              entrypoint: java -Dconfig.profile=pro -jar td-crawler-third.jar
+              networks:
+                     - tc
+              depends_on:
+                         - proeureka
+                         - myconfig
+
+networks:
+   tc:
+       ipam:
+             config:
+                     - subnet: 10.168.0.0/16
+                    #   gateway: 10.168.0.1
+                   
