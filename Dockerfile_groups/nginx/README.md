@@ -4,11 +4,11 @@
 
             docker build -t qmjq/nginx .
 
-            docker run --name qmjq_nginx  --volume /data/nginx/html:/app/soft/nginx/html --volume /data/nginx/logs:/app/soft/nginx/logs  -p 80:80 -p 443:443 qmjq/nginx
+            docker run -itd --name qmjq_nginx  --volume /data/nginx/html:/app/soft/nginx/html --volume /data/nginx/logs:/app/soft/nginx/logs  -p 80:80 -p 443:443 qmjq/nginx
 
         2 挂载volume定制化配置,宿主机可以直接修改配置：
 
             docker build -t qmjq/nginx .
 
-            docker run --name qmjq_nginx  --volume /data/nginx/conf/nginx.conf:/app/soft/nginx/conf/nginx.conf --volume /data/nginx/conf/vhost:/app/soft/nginx/conf/vhost --volume /data/nginx/html:/app/soft/nginx/html --volume /data/nginx/logs:/app/soft/nginx/logs -p 80:80 -p 443:443 qmjq/nginx
+            docker run -itd --name qmjq_nginx  --volume /data/nginx/conf/nginx.conf:/app/soft/nginx/conf/nginx.conf --volume /data/nginx/conf/vhost:/app/soft/nginx/conf/vhost --volume /data/nginx/html:/app/soft/nginx/html --volume /data/nginx/logs:/app/soft/nginx/logs -p 80:80 -p 443:443 qmjq/nginx
 
