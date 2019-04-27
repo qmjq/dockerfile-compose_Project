@@ -3,7 +3,7 @@ MAINTAINER QMJQ 20180818 http://www.opsxyz.com
 RUN mkdir -p /app/soft/ 
 WORKDIR /app/soft
 # yum install depends packages;
-RUN yum -y install make autoconf automake gcc gcc-c++ libtool re2c flex bison libaio libacl-devel libxml2-devel libcurl-devel enchant-devel gmp-devel gd-devel unixODBC-devel libiodbc-devel bzip2-devel perl-ExtUtils-CBuilder perl-ExtUtils-MakeMaker perl-ExtUtils-Embed libicu-devel net-snmp-devel libnl-devel libnl3-devel libnfnetlink-devel pcre-devel openssl-devel
+RUN yum -y install make autoconf automake gcc gcc-c++ libtool re2c flex bison libaio libacl-devel libxml2-devel libcurl-devel enchant-devel gmp-devel gd-devel unixODBC-devel libiodbc-devel bzip2-devel perl-ExtUtils-CBuilder perl-ExtUtils-MakeMaker perl-ExtUtils-Embed libicu-devel net-snmp-devel libnl-devel libnl3-devel libnfnetlink-devel pcre-devel openssl-devel && yum clean all && rm -rf /var/cache/yum/*
 
 # php
 ADD  http://cn2.php.net/distributions/php-5.6.36.tar.gz .
