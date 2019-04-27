@@ -2,7 +2,7 @@ FROM centos
 MAINTAINER QMJQ 20180818 http://www.opsxyz.com
 RUN mkdir -p /app/soft/ 
 WORKDIR /app/soft
-RUN  yum -y install libnl-devel libnl3-devel libnfnetlink-devel pcre-devel openssl-devel gd-devel  make gcc
+RUN  yum -y install libnl-devel libnl3-devel libnfnetlink-devel pcre-devel openssl-devel gd-devel  make gcc &&  yum clean all && rm -rf /var/cache/yum/*
 ADD  http://nginx.org/download/nginx-1.14.0.tar.gz .
 #COPY  nginx-1.14.0.tar.gz .
 RUN  useradd -M -s /sbin/nologin nginx && mkdir nginx && tar -zxvf nginx-1.14.0.tar.gz && cd nginx-1.14.0  && ./configure  --prefix=/app/soft/nginx --user=nginx --group=nginx --with-threads --with-file-aio --with-http_ssl_module --with-http_realip_module --with-http_v2_module --with-http_image_filter_module --with-http_sub_module --with-http_dav_module --with-http_gunzip_module --with-http_gzip_static_module --with-http_auth_request_module --with-http_secure_link_module --with-pcre --with-compat --with-stream  && make && make install && cd .. &&  chown -R nginx:nginx nginx* 
