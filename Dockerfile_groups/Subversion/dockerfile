@@ -1,6 +1,6 @@
 FROM centos
 MAINTAINER JING GE 20180717  http://www.opsxyz.com
-RUN yum -y install subversion
+RUN yum -y install subversion &&  yum clean all && rm -rf /var/cache/yum/*
 RUN mkdir -p  /data/svndata /tmp/svn 
 WORKDIR /data/svndata
 #RUN  /usr/bin/svnadmin create .  &&  rm  -rf conf/* 
