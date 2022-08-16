@@ -8,5 +8,5 @@
 
     更多例子： docker-stack-tc-cloud01.yml docker-stack-tc-cloud02.yml docker-stack-dhcs-182.yml
  
-myweb: http://www.opsxyz.com
+myweb: http://qmjq.github.io
 
