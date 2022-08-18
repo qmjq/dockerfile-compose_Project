@@ -1,5 +1,5 @@
 FROM centos
-MAINTAINER JING GE 20180717  http://www.opsxyz.com
+MAINTAINER JING GE 20180717  http://qmjq.github.io
 RUN yum -y install subversion &&  yum clean all && rm -rf /var/cache/yum/*
 RUN mkdir -p  /data/svndata /tmp/svn 
 WORKDIR /data/svndata

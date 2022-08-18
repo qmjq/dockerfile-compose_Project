@@ -1,5 +1,5 @@
 FROM centos
-MAINTAINER  QMJQ 20180927 http://www.opsxyz.com
+MAINTAINER  QMJQ 20180927 http://qmjq.github.io
 RUN rm -rf /etc/localtime && ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN localedef -c -f UTF-8 -i zh_CN zh_CN.utf8
 COPY jdk-8u151-linux-x64.tar.gz /usr/local/jdk/jdk-8u151-linux-x64.tar.gz

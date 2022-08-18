@@ -1,5 +1,5 @@
 FROM centos
-MAINTAINER QMJQ 20180818 http://www.opsxyz.com
+MAINTAINER QMJQ 20180818 http://qmjq.github.io
 RUN mkdir -p /app/soft/ 
 WORKDIR /app/soft
 # yum install depends packages;
