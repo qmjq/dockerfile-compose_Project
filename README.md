@@ -1,5 +1,5 @@
 # my-dockerfile-compose
-The dockerfile and swarm‘s yml used in my work,  I wrote it 
+The dockerfile and swarm‘s yml
 
 QQ 858080796
 
